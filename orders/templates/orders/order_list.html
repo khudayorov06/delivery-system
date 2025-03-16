@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtmalar ro‘yxati</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Buyurtmalar ro‘yxati</h2>
+cd C:/Users/Admin/Desktop/loixa2025
+
+    <form method="GET">
+    <input type="text" name="q" placeholder="Qidirish..." value="{{ request.GET.q }}">
+    <button type="submit">🔍 Qidirish</button>
+
+    <!-- Tartiblash -->
+    <select name="sort" onchange="this.form.submit()">
+        <option value="order_date" {% if sort_by == "order_date" %}selected{% endif %}>Sana bo‘yicha</option>
+        <option value="customer_name" {% if sort_by == "customer_name" %}selected{% endif %}>Mijoz ismi bo‘yicha</option>
+        <option value="food_item" {% if sort_by == "food_item" %}selected{% endif %}>Taom nomi bo‘yicha</option>
+    </select>
+
+    <!-- Holat bo‘yicha filtr -->
+    <select name="status" onchange="this.form.submit()">
+        <option value="">Barcha buyurtmalar</option>
+        <option value="pending" {% if filter_status == "pending" %}selected{% endif %}>⏳ Kutilmoqda</option>
+        <option value="delivered" {% if filter_status == "delivered" %}selected{% endif %}>✅ Yetkazildi</option>
+    </select>
+</form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Mijoz ismi</th>
+                <th>Telefon</th>
+                <th>Manzil</th>
+                <th>Taom</th>
+                <th>Soni</th>
+                <th>Holat</th>
+                <th>Buyurtma sanasi</th>
+                <th>Amallar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.phone }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.food_item }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.get_status_display }}</td>
+                <td>{{ order.order_date|date:"d-m-Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'update_order' order.pk %}">✏️ Tahrirlash</a> |
+                    <a href="{% url 'delete_order' order.pk %}">🗑 O‘chirish</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">Hech qanday buyurtma mavjud emas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="{% url 'create_order' %}">Yangi buyurtma qo‘shish</a>
+</body>
+</html>

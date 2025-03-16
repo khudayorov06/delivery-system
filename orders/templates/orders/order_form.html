@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Buyurtmani tahrirlash</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Saqlash</button>
+    <a href="{% url 'order_list' %}">Bekor qilish</a>
+  </form>
+<a href="{% url 'order_list' %}">⬅️ Ortga</a>
+{% endblock %}
